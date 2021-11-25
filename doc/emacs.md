@@ -36,7 +36,7 @@ is likely:
       :recipe (:type git
                :host github
                :repo "sogaiu/janet-editor-elf"
-               :files (:defaults ("janet-editor-elf/" 
+               :files (:defaults ("janet-editor-elf/"
                                   "janet-editor-elf/*"))))
 
     (use-package! janet-editor-elf
@@ -77,6 +77,10 @@ via `Enter` -- though these might depend on per-user Emacs settings.
 Indenting of regions should work, but is likely to be slow for larger
 regions.  There is hope this may be improved at some point.
 
+At present it is not recommended to use indentation of regions
+containing long strings as it may lead to undesirable modification of
+leading spaces.
+
 ### Wrapping and Unwrapping
 
 To wrap a form with `(tracev ...)`, put the cursor over the first
@@ -96,4 +100,3 @@ A similar pair of things is possible for use with `(comment ...)` via:
 
 * `M-x jee-comment-wrap`
 * `M-x jee-comment-unwrap`
-
