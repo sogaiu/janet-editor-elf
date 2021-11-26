@@ -81,6 +81,26 @@ At present it is not recommended to use indentation of regions
 containing long strings as it may lead to undesirable modification of
 leading spaces.
 
+As an example, consider:
+```
+(def a
+  ``
+    hello
+    there
+  ``)
+```
+Use of `indent-region` on the whole form will currently produce:
+```
+(def a
+  ``
+  hello
+  there
+  ``)
+```
+This might not be what is desired.  The current plan is to implement
+`indent-region` so that it leaves long string content alone, but this
+is not done yet.
+
 ### Wrapping and Unwrapping
 
 To wrap a form with `(tracev ...)`, put the cursor over the first
