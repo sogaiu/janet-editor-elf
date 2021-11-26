@@ -1,7 +1,7 @@
 # Left Margin Convention
 
 If your source code is compliant with the [Left Margin Convention](https://www.gnu.org/software/emacs/manual/html_node/emacs/Left-Margin-Paren.html)
-it may be that indentation operations may be more efficient.
+janet-editor-elf may work better.
 
 To follow that convention in Janet's case, the characters to avoid having
 in column zero (unless they are being used to indicate the start of a
@@ -24,4 +24,3 @@ efficiency, correct operation, and robustness in the face of code that is
 not-quite-right (e.g. missing delimiters).
 
 If you don't have a particular preference, please consider following it.
-
