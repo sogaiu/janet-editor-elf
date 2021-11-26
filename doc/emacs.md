@@ -74,9 +74,6 @@ is likely:
 Indentation of lines should work via `Tab` and happen automatically
 via `Enter` -- though these might depend on per-user Emacs settings.
 
-Indenting of regions should work, but is likely to be slow for larger
-regions.  There is hope this may be improved at some point.
-
 At present it is not recommended to use `indent-region` on regions
 containing long strings as it may lead to undesirable modification of
 leading spaces.
