@@ -76,7 +76,8 @@ via `Enter` -- though these might depend on per-user Emacs settings.
 
 At present it is not recommended to use `indent-region` on regions
 containing long strings as it may lead to undesirable modification of
-leading spaces.
+leading spaces.  It is also currently the case that `indent-region`
+may be slow on large regions.
 
 As an example, consider:
 ```
