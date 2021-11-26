@@ -1,0 +1,310 @@
+Notes on Implementing Indenting of the Current Line in Janet Code
+
+Things to Keep in Mind
+
+* For the most basic kind of indentation, only the current line is
+  affected, no line above or below is affected.  Other kinds of
+  indentation may be built based on the basic form.
+
+* There is at least one case where a line should not be indented.
+  When the start of the current line is within a multi-line string
+  that started on some previous line, no indentation should occur.
+  (Not sure if there are other cases.)  If additional cases are found,
+  it might be possible to fit them into the scheme described below.
+
+* When a line should be indented, the content of the current line does
+  not affect what the indentation should be.  The indentation is
+  completely determined by content on some or all of the previous
+  lines.
+
+Steps
+
+* If the current line starts off already within a string (though does
+  not start with string / long string delimiters), it does not get
+  indented.  This is the case of a multi-line string where the start
+  of the string is on some previous line.  As a concrete example,
+  imagine a long string in Janet that started on line 10 and the
+  current line number is 11.
+
+  10: ``hello
+  11: world``
+
+  If the following all hold, do not indent the current line:
+
+  * The character starting at column zero of the current line is
+    part of a string.
+
+  * The current line's line number is different from the line number
+    of the start of the string.
+
+* Otherwise, the line could have some indentation.  First, find the
+  left-most non-whitespace character for the current line.  This is
+  referred to by some as the "indentation point" of a line.
+
+* Determine the "context" of the current line's left-most
+  non-whitespace character (indentation point), as determined in the
+  previous step.  The "context" corresponds to the smallest "container"
+  form "surrounding" the indentation point.
+
+  For example, suppose there are the following lines:
+
+    (defn a
+      []
+      (+ 1 1)) # current line
+
+  The indentation point for the current line is "(".
+  The context form corresponds to "(defn a\n  []\n  (+ 1 1))".
+
+  Here's another example.  Suppose there are the following lines:
+
+    (print "hello"
+      ) # current line
+
+  The indentation point for the current line is ")".
+  The context form corresponds to "(print \"hello\"\n  )".
+
+  Note that for (, the context form is the parent, but for ),
+  the context form is the one that ) is part of.
+
+  XXX: The above should be checked.
+
+* Determine the desired indentation for the current line.  That is,
+  calculate which column the current line's left-most non-whitespace
+  character should be located at.
+
+  There appear to be four cases.
+
+  The current line's left-most non-whitespace character's context is:
+
+  1. A non-paren-tuple container (e.g. bracket tuple, array, struct,
+     table)
+
+     [:a
+      :b  # current line
+      :c]
+
+     @["1"
+       "2"
+       "3"] # current line
+
+     {:a 1
+      :b 2} # current line
+
+     @{:x 9
+       :y 0} # current line
+
+     => indent by 1 relative to the last character of the opening
+        delimiter of the context form (e.g. `[`, or `{`).
+
+  2. An empty paren-tuple
+
+     (
+      ) # current line
+
+     => indent by 1 relative to the opening delimiter
+
+  3. A paren-tuple "special" form case (e.g. def, when, let, etc.)
+
+     (def a 1)
+
+     (defn my-fn
+       []
+       (+ 8 1))
+
+     (let [x 1]
+       (+ x 1))
+
+     Count the number of child expressions for the context form that
+     exist before the current line.
+
+     a. No such child forms exist
+   
+        => indent by 1 relative to open paren (which is on some
+           previous line)
+
+        (
+         def a 1) # current line
+
+     b. Exactly one child form exists
+   
+        => indent by 2 relative to open paren
+
+        (def
+          a 1) # current line
+
+     c. Two or more child forms exist
+
+        => indent by 2 relative to open paren
+
+                                -OR-
+   
+        => indent to match the left-most character of first child form
+           on closest previous line (except if prev line has first
+           child form?)
+
+        (def
+          a
+          1) # current line
+
+        (let [x 1]
+          (set y 2)
+          # a comment
+          (+ x y)) # current line
+
+  4. A paren-tuple vanilla function (or macro) call
+
+     (+ 1 0)
+
+     (-> numbers
+         (map inc)
+         (apply max))
+
+     Count the number of child forms for the context form that
+     exist before the current line.
+
+     a. No such child form exists
+   
+        => indent by 1 relative to open paren (which is on some
+           previous line)
+
+        (
+         print "hello") # current line
+
+     b. Exactly one child form exists
+   
+        => indent by 2 relative to open paren
+
+        (print
+          "hello") # current line
+
+     c. Two or more child forms exist
+   
+        => indent to match left-most character of second child form
+
+                                -OR-
+
+        => indent to match left-most character of first child form on
+           closest previous line
+
+                                -OR-
+
+        => indent to match where the second child form would have started
+           if it had been on the same line as the first child form
+
+        (print "alpha"
+               "beta") # current line
+
+        (put @{:a 1}
+             :b 2
+             # fun comment
+             :c 3) # current line
+
+  Assuming the simplest idea is chosen for each case, in all cases except
+  for 4.c., the desired indentation is:
+
+    column position of last character of opening delimiter of context form +
+    some number (usually 1 or 2)
+
+  For case 4.c., the desired indentation is:
+
+    column position of left-most character (i.e. start) of second child form
+
+* If necessary, adjust the amount of leading whitespace on the current line
+  using the desired indentation determined in the previous step.
+
+  * If the leading whitespace is already the right amount, don't
+    change anything.
+    
+  * If there is too much leading whitespace, delete an appropriate amount.
+
+  * If there is not enough leading whitespace, add an appropriate amount.
+
+  Note that in the last case, this may lead to there being more
+  characters on the line than one might want (e.g. > 80 columns for
+  some people).  For the moment, don't try to do anything about this.
+
+Notes
+
+1) When the current line begins with being in the middle of a string and
+   the closing delimiter(s) of the string is / are on the same line
+   indentation doesn't appear to affect the line, but perhaps this is
+   desirable.
+
+   (def a
+     ``
+     hello
+    ``)     # this is the line in question
+
+2) Note that spork/fmt will not change the indentation in the above case,
+   but it affects the number of spaces between the closing paren and the
+   comment:
+
+   (def a
+     ``
+     hello
+    ``) # this is the line in question
+
+3) For the current line, if the left-most non-whitespace character's
+   context is the top-level, shift to the left as much as possible
+   (i.e. no whitespace before the left-most non-whitespace character).
+
+   So assuming the following is the only content in a file (indented by
+   2 spaces), change:
+
+     (def x 2) # the open paren's context is top-level
+
+   to:
+
+   (def x 2) # the open paren's context is top-level
+
+   Resulting in no indentation, i.e. shift to the left by 2.
+
+4) What about quoted tuples (and nested ones)?  It may be that the
+   current spork/fmt behavior is sensible:
+
+   https://github.com/janet-lang/spork/issues/25
+
+   '(:a
+      :b
+      :c)
+
+   [:a
+    :b
+    :c]
+
+   Our algorithm produces the same result.
+
+   A few other "leading" characters to consider:
+
+   ~
+   ;
+   |
+   ,
+
+   What to do for those cases?  Also, are there any other characters
+   that have not been considered?
+
+5) In the general case, I think it is necessary to do something like
+   go back to the beginning of the buffer and start scanning from that
+   spot in order to determine correctly if the first character on your
+   current line is in a string or not.
+
+   Consider the extreme case of a file with one big long string that
+   starts with a delimiter on the first line and ends with a delimiter
+   on the last line.  If the current line is in the middle of the
+   file, AFAICT there is no way to determine whether the first
+   character on the line is in a string or not just by scanning
+   locally.
+
+   I don't think there is any way perfect way around this.  Using
+   tree-sitter effectively achieves this end without using
+   functionality that an editor provides.  However, tree-sitter
+   may not handle broken code so well.
+
+   Note that it might be possible to scan from the end of the file
+   backwards to some point before the current line, parsing in reverse
+   to achieve a similar end, but this might require a specially
+   crafted parser and it's still a linear scan from one extreme.
+
+   There is also the idea of the column zero convention.
+
