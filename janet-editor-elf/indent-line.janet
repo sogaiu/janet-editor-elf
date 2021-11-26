@@ -336,7 +336,6 @@
   # handle mid-tring case separately
   (when (or (= (chr "`") first-char)
             (= (chr `"`) first-char))
-    # XXX: pass in other info from missing-delims
     (break (calc-mid-string-indent preceding-region
                                    delims delim-start-pos delim-type)))
   # replace the last line (already discarded) because:
