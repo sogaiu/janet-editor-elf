@@ -40,6 +40,7 @@ is likely:
                                   "janet-editor-elf/*"))))
 
     (use-package! janet-editor-elf
+      :after janet-mode
       :config
       (add-hook 'janet-mode-hook
                 (lambda ()
