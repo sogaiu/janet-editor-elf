@@ -20,15 +20,23 @@
           (when (bounds/spans? span target-span)
             (eprintf "yes, spans: %p %p" span target-span)
             (array/push ctxt node)
-            (array/push seed-span
-                        (->> (tuple/slice (bounds/content node) 1)
-                             (filter |(and (= :tuple (type $))
-                                           (not= :whitespace
-                                                 (bounds/node-type $))
-                                           (not= :comment
-                                                 (bounds/node-type $))))
-                             first
-                             bounds/span))))))
+            (def nodes
+              (->> (tuple/slice (bounds/content node) 1)
+                   (filter |(and (= :tuple (type $))
+                                 (not= :whitespace
+                                       (bounds/node-type $))
+                                 (not= :comment
+                                       (bounds/node-type $))))))
+            (cond
+              (one? (length nodes))
+              (array/push seed-span (bounds/span (first nodes)))
+              #
+              (> (length nodes) 1)
+              (let [first-node (first nodes)
+                    last-node (last nodes)]
+                (array/push seed-span
+                            [;(slice (bounds/span first-node) 0 2)
+                             ;(slice (bounds/span last-node) 2)])))))))
     (each item (bounds/content node)
       (eprintf "item: %p" item)
       (when (= :tuple (type item))
@@ -38,6 +46,7 @@
   # XXX: is this sensible? if this always works, just keep
   #      overwriting instead of accumulating in array?
   (def result (last ctxt))
+  (eprintf "seed-span: %p" seed-span)
   (def span-result (last seed-span))
   (eprintf "result: %p" result)
   (eprintf "span-result: %p" span-result)
