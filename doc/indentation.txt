@@ -6,16 +6,71 @@ Things to Keep in Mind
   affected, no line above or below is affected.  Other kinds of
   indentation may be built based on the basic form.
 
-* There is at least one case where a line should not be indented.
-  When the start of the current line is within a multi-line string
-  that started on some previous line, no indentation should occur.
-  (Not sure if there are other cases.)  If additional cases are found,
+* There is at least one case where it might not make sense to indent
+  the current line.  When the start of the current line is within a
+  multi-line string that started on some previous line, e.g.
+
+  (def a
+    ``
+    PAY ATTENTION TO THIS PART   (1)
+      BUT ALSO THIS              (2)
+  AND THIS                       (3)
+    ``)
+
+  It's not immediately obvious whether indentation should occur for
+  lines (1), (2), (3).
+
+  It line-by-line indentation is being used, perhaps it makes sense to
+  indent lines (2) and (3) so they are left-aligned with the first
+  backtick of the long-string's opening delimiter.  If the author of
+  those lines doesn't like the default indentation, they can change it on
+  the spot as each line is being entered.
+
+  In Janet, indentation of long strings can alter the ulitmately
+  created string.  See:
+
+  https://github.com/janet-lang/janet/blob/868ec1a7e3369fed026d5fd93543405b01388e0c/src/core/parse.c#L318-L379
+
+  for details.  Roughly, if there is even one "interior" line whose
+  first non-whitespace character is in a column to the left of the column
+  of the first backtick character of the opening delimiter sequence,
+  leading whitespace is not removed from "interior" lines.  (In the
+  example above, the existence of line (3) matches these conditions
+  and thus, no leading whitespace removal would take place.)
+
+  Otherwise, leading whitespace removal takes place.  (In the example
+  above, the resulting string would start with 2 spaces, not P.  If
+  there were no line (3), the resulting string would start with P
+  instead because leading whitespace would have been removed from
+  line (1) (as well as line (2))).
+
+  For indenting regions, it might be better to leave the "indentation"
+  alone, e.g.
+
+  (def b
+    ``
+    This line is unproblematic.    (4)
+      How about this line though?  (5)
+    ``)
+
+  Here, if the author of line (5) intended to have 2 more spaces
+  of indentation compared to line (4), re-indenting line (5) would
+  work against that.  Since region indentation occurs "all at once",
+  this doesn't provide the author an opportunity to confirm / modify
+  the indentation of each line within the region one line at a time.
+
+* Not sure if there are other cases.  If additional cases are found,
   it might be possible to fit them into the scheme described below.
 
 * When a line should be indented, the content of the current line does
   not affect what the indentation should be.  The indentation is
   completely determined by content on some or all of the previous
-  lines.
+  lines.  If the left margin convention is followed, in many cases
+  it may not be necessary to scan from the start of the editor
+  buffer to determine the appropriate context for indenting the
+  current line.
+
+XXX: revise below here given revisions to above
 
 Steps
 
@@ -308,3 +363,24 @@ Notes
 
    There is also the idea of the column zero convention.
 
+6) For the child form counting in the tuple cases, it may be that
+   insufficient consideration has been given to the presence of
+   comments (and whitespace and newlines?) before the first "code"
+   child.
+
+   It might be useful for indentation to behave differently if
+   the first child element is not a "code" form.  Try to explore
+   this idea.
+
+7) for tuples, spork/fmt checks if the second element is "\n"
+   and decides to indent with 2 spaces if so:
+
+   (defn- check-indent-2
+     "Check if a tuple needs a 2 space indent or not"
+     [items]
+     (if-let [[tag body] (get items 0)]
+       (cond
+         (= "\n" (get items 1)) true
+         (not= tag :span) nil
+         (in indent-2-forms body) true
+         (peg/match indent-2-peg body) true)))
