@@ -1,7 +1,12 @@
 (import ./delims)
 
 (def expr-grammar
-  ~{:main (some :input)
+  ~{:main (cmt (sequence (capture (position))
+                         (some :input)
+                         (capture (position)))
+               ,|[:code
+                  ;(slice $& 2 -3)
+                  (first $&) ;(slice $& -3 -2)])
     #
     :input (choice :non-form
                    :form)
@@ -254,28 +259,30 @@
 (comment
 
   (peg/match expr-grammar `@"buffalo?"`)
-  # => '@[(:buffer "buffalo?" 0 11)]
+  # => '@[(:code (:buffer "buffalo?" 0 11) 0 11)]
 
   (peg/match expr-grammar `"himo!"`)
-  # => '@[(:string "himo!" 0 7)]
+  # => '@[(:code (:string "himo!" 0 7) 0 7)]
 
   (peg/match expr-grammar "``himo!``")
-  # => '@[(:long-string "``himo!``" 0 9)]
+  # => '@[(:code (:long-string "``himo!``" 0 9) 0 9)]
 
   (peg/match expr-grammar ":smile")
-  # => '@[(:keyword ":smile" 0 6)]
+  # => '@[(:code (:keyword ":smile" 0 6) 0 6)]
 
   (peg/match expr-grammar "@()")
-  # => '@[(:array 0 3)]
+  # => '@[(:code (:array 0 3) 0 3)]
 
   (deep=
     #
     (peg/match expr-grammar "(+ 1 1)")
     #
-    '@[(:tuple
-         (:symbol "+" 1 2) (:whitespace " " 2 3)
-         (:number "1" 3 4) (:whitespace " " 4 5)
-         (:number "1" 5 6)
+    '@[(:code
+         (:tuple
+           (:symbol "+" 1 2) (:whitespace " " 2 3)
+           (:number "1" 3 4) (:whitespace " " 4 5)
+           (:number "1" 5 6)
+           0 7)
          0 7)])
   # => true
 
@@ -283,12 +290,14 @@
     #
     (peg/match expr-grammar "|(+ 1 $)")
     #
-    '@[(:fn
-         (:tuple
-           (:symbol "+" 2 3) (:whitespace " " 3 4)
-           (:number "1" 4 5) (:whitespace " " 5 6)
-           (:symbol "$" 6 7)
-           1 8)
+    '@[(:code
+         (:fn
+           (:tuple
+             (:symbol "+" 2 3) (:whitespace " " 3 4)
+             (:number "1" 4 5) (:whitespace " " 5 6)
+             (:symbol "$" 6 7)
+             1 8)
+           0 8)
          0 8)])
   # => true
 
@@ -296,9 +305,7 @@
 
 (defn ast
   [code]
-  (->> code
-       (peg/match expr-grammar)
-       first))
+  (first (peg/match expr-grammar code)))
 
 (comment
 
@@ -306,11 +313,32 @@
     #
     (ast "(+ 1 1)")
     #
-    '(:tuple
-       (:symbol "+" 1 2) (:whitespace " " 2 3)
-       (:number "1" 3 4) (:whitespace " " 4 5)
-       (:number "1" 5 6)
+    '(:code
+       (:tuple
+         (:symbol "+" 1 2) (:whitespace " " 2 3)
+         (:number "1" 3 4) (:whitespace " " 4 5)
+         (:number "1" 5 6)
+         0 7)
        0 7))
+  # => true
+
+  (deep=
+    #
+    (ast "(+ 1 1) (- 2 1)")
+    #
+    '(:code
+       (:tuple
+         (:symbol "+" 1 2) (:whitespace " " 2 3)
+         (:number "1" 3 4) (:whitespace " " 4 5)
+         (:number "1" 5 6)
+         0 7)
+       (:whitespace " " 7 8)
+       (:tuple
+         (:symbol "-" 9 10) (:whitespace " " 10 11)
+         (:number "2" 11 12) (:whitespace " " 12 13)
+         (:number "1" 13 14)
+         8 15)
+       0 15))
   # => true
 
   )
@@ -438,6 +466,11 @@
   (let [maybe-code (string "(def a 1")]
     (last-expr maybe-code))
   # => "1"
+
+  # regression test
+  (let [code "(+ 1 1) (- 2 1)"]
+    (last-expr code))
+  # => "(- 2 1)"
 
   )
 
