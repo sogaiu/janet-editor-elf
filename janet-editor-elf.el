@@ -31,6 +31,7 @@
 
 (require 'jee-comment)
 (require 'jee-indent-line)
+(require 'jee-indent-region)
 (require 'jee-tracev)
 
 (provide 'janet-editor-elf)
