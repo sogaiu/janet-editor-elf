@@ -333,7 +333,7 @@
   # balanced delimiters. thus the last line (already discarded) is
   # not at the top-level
   (def first-char (first delims))
-  # handle mid-tring case separately
+  # handle mid-string case separately
   (when (or (= (chr "`") first-char)
             (= (chr `"`) first-char))
     (break (calc-mid-string-indent preceding-region
