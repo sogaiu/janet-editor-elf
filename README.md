@@ -36,3 +36,9 @@ such as Neovim, Kakoune, Freja, and possibly VSCode.
 * llmII - discussion and testing
 * pyrmont - discussion
 * saikyun - discussion and freja
+
+## License
+
+janet-editor-elf includes jandent, which is based on spork/fmt, thus
+its license applies to those bits.
+
