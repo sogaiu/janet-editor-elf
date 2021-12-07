@@ -4,39 +4,41 @@
 (comment
 
   (peg/match expr-grammar " ")
-  # => '@[(:whitespace " " 0 1)]
+  # => '@[(:code (:whitespace " " 0 1) 0 1)]
 
   (peg/match expr-grammar "# hi there ")
-  # => '@[(:comment " hi there " 0 11)]
+  # => '@[(:code (:comment " hi there " 0 11) 0 11)]
 
   (peg/match expr-grammar "8")
-  # => '@[(:number "8" 0 1)]
+  # => '@[(:code (:number "8" 0 1) 0 1)]
 
   (peg/match expr-grammar "true")
-  # => '@[(:constant "true" 0 4)]
+  # => '@[(:code (:constant "true" 0 4) 0 4)]
 
   (peg/match expr-grammar "~0")
-  # => '@[(:quasiquote (:number "0" 1 2) 0 2)]
+  # => '@[(:code (:quasiquote (:number "0" 1 2) 0 2) 0 2)]
 
   (peg/match expr-grammar "':hi")
-  # => '@[(:quote (:keyword ":hi" 1 4) 0 4)]
+  # => '@[(:code (:quote (:keyword ":hi" 1 4) 0 4) 0 4)]
 
   (peg/match expr-grammar "@``snake?``")
-  # => '@[(:long-buffer "``snake?``" 0 11)]
+  # => '@[(:code (:long-buffer "``snake?``" 0 11) 0 11)]
 
   (peg/match expr-grammar "print")
-  # => '@[(:symbol "print" 0 5)]
+  # => '@[(:code (:symbol "print" 0 5) 0 5)]
 
   (peg/match expr-grammar "()")
-  # => '@[(:tuple 0 2)]
+  # => '@[(:code (:tuple 0 2) 0 2)]
 
   (deep=
     #
     (peg/match expr-grammar "[2 3]")
     #
-    '@[(:bracket-tuple
-         (:number "2" 1 2) (:whitespace " " 2 3)
-         (:number "3" 3 4)
+    '@[(:code
+         (:bracket-tuple
+           (:number "2" 1 2) (:whitespace " " 2 3)
+           (:number "3" 3 4)
+           0 5)
          0 5)])
   # => true
 
@@ -44,11 +46,13 @@
     #
     (peg/match expr-grammar ";[8 9]")
     #
-    '@[(:splice
-         (:bracket-tuple
-           (:number "8" 2 3) (:whitespace " " 3 4)
-           (:number "9" 4 5)
-           1 6)
+    '@[(:code
+         (:splice
+           (:bracket-tuple
+             (:number "8" 2 3) (:whitespace " " 3 4)
+             (:number "9" 4 5)
+             1 6)
+           0 6)
          0 6)])
   # => true
 
@@ -56,9 +60,11 @@
     #
     (peg/match expr-grammar "@[:x :z]")
     #
-    '@[(:bracket-array
-         (:keyword ":x" 2 4) (:whitespace " " 4 5)
-         (:keyword ":z" 5 7)
+    '@[(:code
+         (:bracket-array
+           (:keyword ":x" 2 4) (:whitespace " " 4 5)
+           (:keyword ":z" 5 7)
+           0 8)
          0 8)])
   # => true
 
@@ -66,10 +72,12 @@
     #
     (peg/match expr-grammar "~,1")
     #
-    '@[(:quasiquote
-         (:unquote
-           (:number "1" 2 3)
-           1 3)
+    '@[(:code
+         (:quasiquote
+           (:unquote
+             (:number "1" 2 3)
+             1 3)
+           0 3)
          0 3)])
   # => true
 
@@ -77,9 +85,11 @@
     #
     (peg/match expr-grammar "@{:a 1}")
     #
-    '@[(:table
-         (:keyword ":a" 2 4) (:whitespace " " 4 5)
-         (:number "1" 5 6)
+    '@[(:code
+         (:table
+           (:keyword ":a" 2 4) (:whitespace " " 4 5)
+           (:number "1" 5 6)
+           0 7)
          0 7)])
   # => true
 
@@ -88,12 +98,14 @@
     (peg/match expr-grammar (string "{:alpha 1\n"
                                     " :beta 2}"))
     #
-    '@[(:struct
-         (:keyword ":alpha" 1 7) (:whitespace " " 7 8)
-         (:number "1" 8 9) (:whitespace "\n" 9 10)
-         (:whitespace " " 10 11)
-         (:keyword ":beta" 11 16) (:whitespace " " 16 17)
-         (:number "2" 17 18)
+    '@[(:code
+         (:struct
+           (:keyword ":alpha" 1 7) (:whitespace " " 7 8)
+           (:number "1" 8 9) (:whitespace "\n" 9 10)
+           (:whitespace " " 10 11)
+           (:keyword ":beta" 11 16) (:whitespace " " 16 17)
+           (:number "2" 17 18)
+           0 19)
          0 19)])
   # => true
 
