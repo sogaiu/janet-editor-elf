@@ -30,6 +30,7 @@
 ;;; Code:
 
 (require 'jee-top-level)
+(require 'jee-utils)
 
 (defvar jee-indent-line--helper-path
   (expand-file-name
@@ -146,6 +147,16 @@ Ignores INDENT-POINT and STATE and just uses `jee-indent-line--calculate'."
         (goto-char (- (point-max) pos))))))
 
 ;; XXX: enumerate other indentation related functions and consider necessity
+
+(jee-comment
+
+ (add-hook 'janet-mode-hook
+           (lambda ()
+             (require 'jee-indent-line)
+             (setq-local indent-line-function
+                         #'jee-indent-line)))
+
+ )
 
 (provide 'jee-indent-line)
 ;;; jee-indent-line.el ends here
