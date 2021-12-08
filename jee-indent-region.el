@@ -44,6 +44,10 @@
   nil
   "If non-nil, output debug info to *Messages* buffer.")
 
+(defvar jee-indent-region--temp-files
+  '()
+  "List of files to delete when Emacs exits.")
+
 (defvar jee-indent-region--temp-buffers
   '()
   "List of buffers to clean up before calling `jee-indent-region--helper'.")
@@ -88,7 +92,14 @@ completely contains the aforementiond inner region.  The outer
 region is bound by OUTER-START and OUTER-END.  The beginning of
 the outer region is expected to be the start of a top level
 construct."
-  (let ((temp-buffer (generate-new-buffer "*jee-indent*")))
+  (let ((temp-buffer (generate-new-buffer "*jee-indent*"))
+        (err-file (if (not jee-indent-region--debug-output)
+                      nil
+                    ;; arrangements for deletion are near end of this file
+                    (let ((file-path (make-temp-file
+                                      "jee-indent-region-err")))
+                      (add-to-list 'jee-indent-region--temp-files file-path)
+                      file-path))))
     ;; clean up any old buffers
     ;; XXX: assumes all previous calls have completed before this invocation
     (dolist (old-buffer jee-indent-region--temp-buffers)
@@ -99,17 +110,15 @@ construct."
         (let ((result nil))
           (save-excursion
             (when jee-indent-region--debug-output
+              (message "error file: %S" err-file)
               (message "region: %S"
                        (buffer-substring-no-properties outer-start
                                                        outer-end)))
             ;; https://emacs.stackexchange.com/a/54353
             (let ((exit-code
                    (call-process-region outer-start outer-end
-                                        "janet" nil
-                                        `(,temp-buffer nil)
-                                        ;; XXX
-                                        ;;`(,temp-buffer "/tmp/jee-ir.txt")
-                                        nil
+                                        "janet"
+                                        nil `(,temp-buffer ,err-file) nil
                                         jee-indent-region--helper-path
                                         (number-to-string outer-offset)
                                         (number-to-string start-offset)
@@ -211,6 +220,12 @@ multiline strings is left alone."
             ;; this only indents if necessary
             (indent-line-to indent)
             (setq cur-line-no (line-number-at-pos))))))))
+
+;; clean up temp files
+(add-hook 'kill-emacs-hook
+          (lambda ()
+            (dolist (file-path jee-indent-region--temp-files)
+              (delete-file file-path 'trash))))
 
 (jee-comment
 
