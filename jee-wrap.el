@@ -68,7 +68,7 @@ helper program."
             ;; prepare content to send
             (set-buffer send-buffer)
             ;; XXX: extend to work with a region?
-            (insert (format "Name: %s\n" name))  ;; 0- vs 1-based
+            (insert (format "Name: %s\n" name))
             (insert (format "Line: %d\n" (1+ line)))  ;; 0- vs 1-based
             (insert (format "Column: %d\n" (1+ col))) ;; 0- vs 1-based
             (insert "\n")
