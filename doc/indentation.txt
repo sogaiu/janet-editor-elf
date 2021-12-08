@@ -372,15 +372,3 @@ Notes
    the first child element is not a "code" form.  Try to explore
    this idea.
 
-7) for tuples, spork/fmt checks if the second element is "\n"
-   and decides to indent with 2 spaces if so:
-
-   (defn- check-indent-2
-     "Check if a tuple needs a 2 space indent or not"
-     [items]
-     (if-let [[tag body] (get items 0)]
-       (cond
-         (= "\n" (get items 1)) true
-         (not= tag :span) nil
-         (in indent-2-forms body) true
-         (peg/match indent-2-peg body) true)))
