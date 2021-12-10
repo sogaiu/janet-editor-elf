@@ -13,6 +13,7 @@
 ;;; Code:
 
 (require 'jee-bounds)
+(require 'jee-indent-region)
 (require 'jee-top-level)
 
 (defvar jee-wrap--helper-path
@@ -189,7 +190,9 @@ helper program."
       (kill-region beg end)
       (insert (concat "(" name " "))
       (yank)
-      (insert ")"))))
+      (insert ")")
+      ;; tidy
+      (indent-region beg (point)))))
 
 (defun jee-wrap--unwrap (name)
   "Remove wrapping for NAME."
@@ -240,7 +243,9 @@ helper program."
       ;; delete
       (kill-region t-start t-end)
       ;; insert
-      (yank 2))))
+      (yank 2)
+      ;; tidy
+      (indent-region t-start (point)))))
 
 ;; XXX: figure out
 (defun jee-wrap--remove-from-top-level (name)
