@@ -24,5 +24,10 @@
   (interactive)
   (jee-wrap--unwrap "comment"))
 
+(defun jee-comment-wrap-region (beg end)
+  "Wrap region bound by BEG and END with comment call."
+  (interactive "r")
+  (jee-wrap--wrap-region-with beg end "comment\n"))
+
 (provide 'jee-comment)
 ;;; jee-comment.el ends here

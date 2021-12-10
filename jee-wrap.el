@@ -247,6 +247,27 @@ helper program."
       ;; tidy
       (indent-region t-start (point)))))
 
+(defun jee-wrap--wrap-region-with (beg end name)
+  "Wrap region bound by BEG and END with call to NAME."
+  (interactive)
+  (let ((real-beg nil)
+        (real-end nil))
+    ;; real beginning
+    (goto-char beg)
+    (beginning-of-line)
+    (setq real-beg (point))
+    ;; real end
+    (goto-char end)
+    (end-of-line)
+    (setq real-end (point))
+    ;; replace
+    (kill-region real-beg real-end)
+    (insert (concat "(" name " "))
+    (yank)
+    (insert ")\n")
+    ;; tidy
+    (indent-region real-beg (point))))
+
 ;; XXX: figure out
 (defun jee-wrap--remove-from-top-level (name)
   "Unwrap each call to NAME from a top level construct."
