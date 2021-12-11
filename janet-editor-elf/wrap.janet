@@ -24,8 +24,6 @@
               (->> (tuple/slice (bounds/content node) 1)
                    (filter |(and (= :tuple (type $))
                                  (not= :whitespace
-                                       (bounds/node-type $))
-                                 (not= :comment
                                        (bounds/node-type $))))))
             (cond
               (one? (length nodes))
