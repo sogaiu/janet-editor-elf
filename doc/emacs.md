@@ -143,3 +143,7 @@ A similar pair of things is possible for use with `(comment ...)` via:
 
 * `M-x jee-comment-wrap`
 * `M-x jee-comment-unwrap`
+
+There is also a command to operate on wrapping a region:
+
+* `M-x jee-comment-wrap-region`
