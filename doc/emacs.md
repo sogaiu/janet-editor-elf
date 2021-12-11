@@ -25,7 +25,11 @@ is likely:
       (add-hook 'janet-mode-hook
                 (lambda ()
                   (setq-local indent-line-function
-                              #'jee-indent-line))))
+                              #'jee-indent-line)))
+      (add-hook 'janet-mode-hook
+                (lambda ()
+                  (setq-local indent-region-function
+                              #'jee-indent-region))))
     ```
 
 ### Doom
@@ -45,7 +49,11 @@ is likely:
       (add-hook 'janet-mode-hook
                 (lambda ()
                   (setq-local indent-line-function
-                              #'jee-indent-line))))
+                              #'jee-indent-line)))
+      (add-hook 'janet-mode-hook
+                (lambda ()
+                  (setq-local indent-region-function
+                              #'jee-indent-region))))
     ```
 
 ### Vanilla
@@ -61,6 +69,11 @@ is likely:
                 (require 'janet-editor-elf)
                 (setq-local indent-line-function
                             #'jee-indent-line)))
+
+    (add-hook 'janet-mode-hook
+              (lambda ()
+                (setq-local indent-region-function
+                            #'jee-indent-region)))
     ```
 
 ### package.el
@@ -75,12 +88,12 @@ is likely:
 Indentation of lines should work via `Tab` and happen automatically
 via `Enter` -- though these might depend on per-user Emacs settings.
 
-At present it is not recommended to use `indent-region` on regions
-containing long strings as it may lead to undesirable modification of
-leading spaces.  It is also currently the case that `indent-region`
-may be slow on large regions.
+There is a separate implementation for `indent-region`.  Its behavior
+differs a bit from repeatedly applying `indent-line` to lines in a
+region, but it should also be faster.
 
-As an example, consider:
+To illustrate, consider the following code:
+
 ```
 (def a
   ``
@@ -88,7 +101,10 @@ As an example, consider:
     there
   ``)
 ```
-Use of `indent-region` on the whole form will currently produce:
+
+If one were to apply `indent-line` manually to each line, the result
+would be:
+
 ```
 (def a
   ``
@@ -96,9 +112,17 @@ Use of `indent-region` on the whole form will currently produce:
   there
   ``)
 ```
-This might not be what is desired.  The current plan is to implement
-`indent-region` so that it leaves long string content alone, but this
-is not done yet.
+
+Note that the leading space from some lines within the long string
+have been changed.  This is not likely to be what one wants when
+indenting the region.  `indent-region` should preserve such whitespace,
+leaving the long string unchanged.
+
+Note that pressing `Enter` within a long string may lead to
+indentation of the line the cursor was just on (which may change the
+leading whitespace).  One way to prevent that from occuring is to use
+`C-q C-j` (i.e. applying the Emacs command `quoted-insert` to `C-j`)
+instead of `Enter` for such lines.
 
 ### Wrapping and Unwrapping
 
