@@ -27,6 +27,12 @@
 ;;                (setq-local indent-line-function
 ;;                            #'jee-indent-line)))
 ;;
+;;    (add-hook 'janet-mode-hook
+;;              (lambda ()
+;;                (require 'janet-editor-elf)
+;;                (setq-local indent-region-function
+;;                            #'jee-indent-region)))
+;;
 ;;    (add-hook 'janet-mode-hook #'jee-mode)
 
 ;;; Code:
@@ -73,6 +79,12 @@ The following keys are available in `jee-mode`:
              (require 'janet-editor-elf)
              (setq-local indent-line-function
                          #'jee-indent-line)))
+
+ (add-hook 'janet-mode-hook
+           (lambda ()
+             (require 'janet-editor-elf)
+             (setq-local indent-region-function
+                         #'jee-indent-region)))
 
  (add-hook 'janet-mode-hook #'jee-mode)
 
