@@ -163,9 +163,12 @@ helper program."
         ;; ask the helper to try to determine bounds
         (jee-wrap--helper start end cur-line cur-col name)))))
 
-(defun jee-wrap--wrap-with (name)
-  "Wrap with call to NAME."
-  (interactive)
+(defun jee-wrap--wrap-with (name-ish)
+  "Wrap with call to NAME-ISH.
+
+If NAME-ISH is an empty string or ends with a space or newline,
+inserts NAME-ISH as-is.  Otherwise, inserts a space after
+NAME-ISH."
   (when-let ((result (jee-bounds--calculate)))
     (let ((offset (nth 0 result))
           (start-line (nth 1 result))
@@ -173,7 +176,12 @@ helper program."
           (end-line (nth 3 result))
           (end-col (nth 4 result))
           (beg nil)
-          (end nil))
+          (end nil)
+          (start-part (if (or (string-empty-p name-ish)
+                              (string-suffix-p " " name-ish)
+                              (string-suffix-p "\n" name-ish))
+                          name-ish
+                        (concat name-ish " "))))
       ;; start
       (goto-char (point-min))
       (forward-line offset)
@@ -188,7 +196,7 @@ helper program."
       (setq end (point))
       ;; replace
       (kill-region beg end)
-      (insert (concat "(" name " "))
+      (insert (concat "(" start-part))
       (yank)
       (insert ")")
       ;; tidy
@@ -247,11 +255,19 @@ helper program."
       ;; tidy
       (indent-region t-start (point)))))
 
-(defun jee-wrap--wrap-region-with (beg end name)
-  "Wrap region bound by BEG and END with call to NAME."
-  (interactive)
+(defun jee-wrap--wrap-region-with (beg end name-ish)
+  "Wrap region bound by BEG and END with call to NAME-ISH.
+
+If NAME-ISH is an empty string or ends with a space or newline,
+inserts NAME-ISH as-is.  Otherwise, inserts a space after
+NAME-ISH."
   (let ((real-beg nil)
-        (real-end nil))
+        (real-end nil)
+        (start-part (if (or (string-empty-p name-ish)
+                            (string-suffix-p " " name-ish)
+                            (string-suffix-p "\n" name-ish))
+                        name-ish
+                      (concat name-ish " "))))
     ;; real beginning
     (goto-char beg)
     (beginning-of-line)
@@ -262,7 +278,7 @@ helper program."
     (setq real-end (point))
     ;; replace
     (kill-region real-beg real-end)
-    (insert (concat "(" name " "))
+    (insert (concat "(" start-part))
     (yank)
     (insert ")\n")
     ;; tidy
