@@ -383,7 +383,7 @@
   (var fmt-1-recur nil)
 
   (defn emit-body
-    [open xs close &opt delta]
+    [open xs close &opt delta top]
     (def od-col col)
     (emit open)
     #
@@ -392,15 +392,16 @@
     (dropwhite)
     (dedent)
     # XXX: messy part
-    (cond
-      # empty container case
-      (and (has-nl? xs) (zero? (length (non-nls xs))))
-      (emit (string/repeat " " (+ od-col 1)))
-      # XXX: actually want alignment with opening delimiter
-      #      of 2nd non-ws, non-comment child?
-      (zero? col)
-      (emit (string/repeat " "
-                           (+ od-col 1 (or delta 0)))))
+    (when (not top)
+      (cond
+        # empty container case
+        (and (has-nl? xs) (zero? (length (non-nls xs))))
+        (emit (tracev (string/repeat " " (+ od-col 1))))
+        # XXX: actually want alignment with opening delimiter
+        #      of 2nd non-ws, non-comment child?
+        (zero? col)
+        (emit (string/repeat " "
+                             (+ od-col 1 (or delta 0))))))
     #
     (emit close))
 
@@ -444,8 +445,6 @@
       (fmt-1-recur nf))
     (fmt-1-recur form))
 
-  (var before-first-nl true)
-
   (defn fmt-1
     [node]
     # insert appropriate whitespace
@@ -455,7 +454,7 @@
     # node-specific "emission"
     (match node
       "\n" (newline)
-      [:ws-bi x] (prin (if before-first-nl x ""))
+      [:ws-bi x] (prin "")
       [:ws x] (emit x)
       [:ws-tr x] (prin x)
       [:comment x] (emit "#" x)
@@ -475,8 +474,7 @@
       [:struct xs] (emit-body "{" xs "}")
       [:table xs] (emit-body "@{" xs "}")
       [:rmform [rm nfs form]] (emit-rmform rm nfs form)
-      [:top xs] (emit-body "" xs ""))
-    (set before-first-nl false))
+      [:top xs] (emit-body "" xs "" nil true)))
 
   (set fmt-1-recur fmt-1)
   (fmt-1 tree)
