@@ -25,11 +25,7 @@
 ;;              (lambda ()
 ;;                (require 'janet-editor-elf)
 ;;                (setq-local indent-line-function
-;;                            #'jee-indent-line)))
-;;
-;;    (add-hook 'janet-mode-hook
-;;              (lambda ()
-;;                (require 'janet-editor-elf)
+;;                            #'jee-indent-line)
 ;;                (setq-local indent-region-function
 ;;                            #'jee-indent-region)))
 ;;
@@ -78,11 +74,7 @@ The following keys are available in `jee-mode`:
            (lambda ()
              (require 'janet-editor-elf)
              (setq-local indent-line-function
-                         #'jee-indent-line)))
-
- (add-hook 'janet-mode-hook
-           (lambda ()
-             (require 'janet-editor-elf)
+                         #'jee-indent-line)
              (setq-local indent-region-function
                          #'jee-indent-region)))
 

@@ -22,12 +22,15 @@ is likely:
     (use-package janet-editor-elf
       :straight t
       :config
+      ;; menu
+      (add-hook 'janet-mode-hook #'jee-mode)
+      ;; indentation
       (add-hook 'janet-mode-hook
                 (lambda ()
+                  ;; line indentation
                   (setq-local indent-line-function
-                              #'jee-indent-line)))
-      (add-hook 'janet-mode-hook
-                (lambda ()
+                              #'jee-indent-line)
+                  ;; region indentation
                   (setq-local indent-region-function
                               #'jee-indent-region))))
     ```
@@ -46,12 +49,15 @@ is likely:
     (use-package! janet-editor-elf
       :after janet-mode
       :config
+      ;; menu
+      (add-hook 'janet-mode-hook #'jee-mode)
+      ;; indentation
       (add-hook 'janet-mode-hook
                 (lambda ()
+                  ;; line indentation
                   (setq-local indent-line-function
-                              #'jee-indent-line)))
-      (add-hook 'janet-mode-hook
-                (lambda ()
+                              #'jee-indent-line)
+                  ;; region indentation
                   (setq-local indent-region-function
                               #'jee-indent-region))))
     ```
@@ -64,14 +70,17 @@ is likely:
     (add-to-list 'load-path
                  (expand-file-name "~/src/janet-editor-elf"))
 
+    ;; menu
+    (add-hook 'janet-mode-hook #'jee-mode)
+
+    ;; indentation
     (add-hook 'janet-mode-hook
               (lambda ()
                 (require 'janet-editor-elf)
+                ;; line indentation
                 (setq-local indent-line-function
-                            #'jee-indent-line)))
-
-    (add-hook 'janet-mode-hook
-              (lambda ()
+                            #'jee-indent-line)
+                ;; region indentation
                 (setq-local indent-region-function
                             #'jee-indent-region)))
     ```
