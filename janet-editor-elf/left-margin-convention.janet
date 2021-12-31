@@ -69,7 +69,8 @@
     (parser/consume p (get src-chunks 0))
     (parser/consume p (get src-chunks 1))
     (in-string? p))
-  # => true
+  # =>
+  true
 
   (let [src-chunks
         @["(defn a\n"
@@ -79,7 +80,8 @@
     (def p (parser/new))
     (parser/consume p (get src-chunks 0))
     (in-string? p))
-  # => false
+  # =>
+  false
 
   (let [src-chunks
         @["(defn a\n"
@@ -91,7 +93,8 @@
     (parser/consume p (get src-chunks 1))
     (parser/consume p (get src-chunks 2))
     (in-string? p))
-  # => false
+  # =>
+  false
 
   )
 
@@ -109,7 +112,8 @@
     (def p (parser/new))
     (parser/consume p (get src-chunks 0))
     (in-comment? p))
-  # => true
+  # =>
+  true
 
   (let [src-chunks
         @["# nice comment" " that is here\n"]]
@@ -117,7 +121,8 @@
     (parser/consume p (get src-chunks 0))
     (parser/consume p (get src-chunks 1))
     (in-comment? p))
-  # => false
+  # =>
+  false
 
   )
 
@@ -130,7 +135,8 @@
 (comment
 
   (make-set [1 2 3])
-  # => @{1 true 2 true 3 true}
+  # =>
+  @{1 true 2 true 3 true}
 
   )
 
@@ -191,23 +197,28 @@
 
   (let [source " "]
     (empty? (analyze (string/split "\n" source))))
-  # => true
+  # =>
+  true
 
   (let [source "\0"]
     (empty? (analyze (string/split "\n" source))))
-  # => true
+  # =>
+  true
 
   (let [source "\f"]
     (empty? (analyze (string/split "\n" source))))
-  # => true
+  # =>
+  true
 
   (let [source "\t"]
     (empty? (analyze (string/split "\n" source))))
-  # => true
+  # =>
+  true
 
   (let [source "\v"]
     (empty? (analyze (string/split "\n" source))))
-  # => true
+  # =>
+  true
 
   (let [source
         ``
@@ -216,14 +227,16 @@
           (+ x y))
         ``]
     (empty? (analyze (string/split "\n" source))))
-  # => true
+  # =>
+  true
 
   (let [source
         ``
         (def a 1)
         ``]
     (empty? (analyze (string/split "\n" source))))
-  # => true
+  # =>
+  true
 
   (let [source
         ``
@@ -233,63 +246,72 @@
           8)
         ``]
     (empty? (analyze (string/split "\n" source))))
-  # => true
+  # =>
+  true
 
   (let [source
         ``
         '(print "hi")
         ``]
     (empty? (analyze (string/split "\n" source))))
-  # => true
+  # =>
+  true
 
   (let [source
         ``
         ~(+ 1 1)
         ``]
     (empty? (analyze (string/split "\n" source))))
-  # => true
+  # =>
+  true
 
   (let [source
         ``
         # stuff after here should be "caught"
         ``]
     (empty? (analyze (string/split "\n" source))))
-  # => true
+  # =>
+  true
 
   (let [source
         ``
         1 # a number at the top-level just wastes cycles?
         ``]
     (empty? (analyze (string/split "\n" source))))
-  # => false
+  # =>
+  false
 
   (let [source
         ``
         {:a :b} # a struct at the top-level just wastes cycles?
         ``]
     (empty? (analyze (string/split "\n" source))))
-  # => false
+  # =>
+  false
 
   (let [source
         ``
         [1 2 3] # a square bracket tuple at the top-level just wastes cycles?
         ``]
     (empty? (analyze (string/split "\n" source))))
-  # => false
+  # =>
+  false
 
   (let [source
         ``
         "hi" # a string at the top-level just wastes cycles?
         ``]
     (empty? (analyze (string/split "\n" source))))
-  # => false
+  # =>
+  false
 
   (let [source
         ```
         ``smile!`` # a lone string at the top-level just wastes cycles?
         ```]
     (empty? (analyze (string/split "\n" source))))
-  # => false
+  # =>
+  false
 
   (let [source
         ```
@@ -299,7 +321,8 @@
           2)
         ```]
     (empty? (analyze (string/split "\n" source))))
-  # => false
+  # =>
+  false
 
   (let [source
         ```
@@ -309,7 +332,8 @@
           2)
         ```]
     (empty? (analyze (string/split "\n" source))))
-  # => false
+  # =>
+  false
 
   (let [source
         `````
@@ -321,7 +345,8 @@
           3)
         `````]
     (empty? (analyze (string/split "\n" source))))
-  # => false
+  # =>
+  false
 
   (let [source
         `````
@@ -333,7 +358,8 @@
           3)
         `````]
     (empty? (analyze (string/split "\n" source))))
-  # => false
+  # =>
+  false
 
   (let [source
         `````
@@ -345,7 +371,8 @@
           3)
         `````]
     (empty? (analyze (string/split "\n" source))))
-  # => false
+  # =>
+  false
 
   (let [source
         `````
@@ -358,7 +385,8 @@
           3)
         `````]
     (empty? (analyze (string/split "\n" source))))
-  # => false
+  # =>
+  false
 
   (let [source
         `````
@@ -370,7 +398,8 @@
           2)
         `````]
     (empty? (analyze (string/split "\n" source))))
-  # => false
+  # =>
+  false
 
   )
 
@@ -381,32 +410,38 @@
   (parser/consume p "(")
 
   (parser/status p)
-  # => :pending
+  # =>
+  :pending
 
   (parser/consume p ")")
 
   (parser/status p)
-  # => :root
+  # =>
+  :root
 
   ###
 
   (parser/consume p "``\nhello\n")
 
   (parser/status p)
-  # => :pending
+  # =>
+  :pending
 
   (in-string? p)
-  # => true
+  # =>
+  true
 
   (parser/consume p "``")
 
   (parser/status p)
-  # => :pending
+  # =>
+  :pending
 
   (parser/consume p " ")
 
   (parser/status p)
-  # => :root
+  # =>
+  :root
 
   )
 

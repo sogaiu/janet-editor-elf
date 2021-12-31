@@ -15,19 +15,24 @@
 (comment
 
   (indentation-pos "    3")
-  # => 4
+  # =>
+  4
 
   (indentation-pos ":a")
-  # => 0
+  # =>
+  0
 
   (indentation-pos " ")
-  # => 0
+  # =>
+  0
 
   (indentation-pos "")
-  # => 0
+  # =>
+  0
 
   (indentation-pos " @``")
-  # => 1
+  # =>
+  1
 
   )
 
@@ -173,7 +178,7 @@
 # .                                           n inner lines
 # .                                               /
 # .                                              /
-# k    end of inner region                      
+# k    end of inner region
 (defn main
   [& args]
   (def outer-offset (scan-number (get args 1)))

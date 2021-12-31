@@ -10,7 +10,8 @@
             ""      "\n"
             "")          # 3 lines down, 1 line region
     100 3 1)
-  # => '@[(103 0)]
+  # =>
+  '@[(103 0)]
 
   # last line has a top-level construct
   (calc-region-indent
@@ -20,7 +21,8 @@
             ""          "\n"
             `(def a 1)`)     # 4 lines down, 1 line region
     200 4 1)
-  # => '@[(204 0)]
+  # =>
+  '@[(204 0)]
 
   # last line starts a top-level construct
   (calc-region-indent
@@ -29,7 +31,8 @@
             ""       "\n"
             `(def a`)     # 3 lines down, 1 line region
     50 3 1)
-  # => '@[(53 0)]
+  # =>
+  '@[(53 0)]
 
   )
 
@@ -45,7 +48,8 @@
             "  ``"        "\n"
             `hello`)           # should be left alone
     10 2 4)
-  # => '@[(13 2)]
+  # =>
+  '@[(13 2)]
 
   # last line is a comment
   (calc-region-indent
@@ -54,7 +58,8 @@
             ` (defn a [x]` "\n" # 2 lines down, 2 line region
             ` # hello`)
     25 2 2)
-  # => '@[(27 0) (28 2)]
+  # =>
+  '@[(27 0) (28 2)]
 
   # last line does not end in a comment
   (calc-region-indent
@@ -63,7 +68,8 @@
             ""            "\n"
             ` # hello`)        # 3 lines down, 1 line region
     300 3 1)
-  # => '@[(303 0)]
+  # =>
+  '@[(303 0)]
 
   )
 
@@ -78,7 +84,8 @@
             ""            "\n"
             ` # hello`)
     1 2 4)
-  # => '@[(3 0) (4 2) (6 0)]
+  # =>
+  '@[(3 0) (4 2) (6 0)]
 
   (calc-region-indent
     (string `(+ 1 1)`     "\n" # line 1
@@ -90,6 +97,7 @@
             ""            "\n"
             ` (def c 3)`)
     1 2 6)
-  # => '@[(3 0) (4 2) (5 0) (6 2) (8 0)]
+  # =>
+  '@[(3 0) (4 2) (5 0) (6 2) (8 0)]
 
   )
