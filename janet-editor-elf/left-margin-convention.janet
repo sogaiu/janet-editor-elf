@@ -30,7 +30,9 @@
 # * closing delimiters in col 0 seem harmless, still warn?
 # * special handling for \r\n needed?
 # * is all relevant whitespace addressed appropriately?
-# * assuming source is well-formed reasonable?
+# * assuming source is well-formed reasonable?  can adjust to
+#   handle as much as possible and return info about whatever
+#   was covered and reason for stopping?
 
 # * are there any cases that this doesn't handle?
 
