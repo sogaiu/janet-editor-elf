@@ -370,7 +370,7 @@
 
 (defn find-expr
   [tree pos]
-  (var ctxt @[tree])
+  (var ctxt nil)
   (defn helper
     [node]
     (when (= :tuple (type node))
@@ -384,13 +384,14 @@
                            (node-type item)))
             (def end-pos (end item))
             (when (= pos end-pos)
-              (array/push ctxt item))))
+              (set ctxt item)
+              (break))))
         (helper item))))
   #
   (helper tree)
   # XXX
   (eprintf "ctxt: %p" ctxt)
-  (last ctxt))
+  ctxt)
 
 (defn last-expr
   [maybe-code]
@@ -473,6 +474,12 @@
     (last-expr code))
   # =>
   "(- 2 1)"
+
+  # regression test
+  (let [code "'(+ 1 1)"]
+    (last-expr code))
+  # =>
+  "'(+ 1 1)"
 
   )
 
