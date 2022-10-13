@@ -8,6 +8,17 @@ is likely:
 
 * Ensure a janet-mode is installed and configured.
 
+* For indentation to work appropriately, a buffer should not contain
+  any tab characters.
+
+  One way to remove existing tabs is to use the
+  `untabify` command after selecting buffer content that contains
+  tabs.
+
+  One way to prevent additional tabs from being inserted is to utilize
+  `indent-tabs-mode`, e.g.  I have `(setq-default indent-tabs-mode
+  nil)` in my `.emacs` equaivalent.
+
 * Clone this repository.
 
 ### straight.el
