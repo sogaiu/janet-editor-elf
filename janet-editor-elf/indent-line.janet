@@ -17,7 +17,7 @@
    "prompt"
    "repeat"
    "seq" "short-fn"
-   "try"
+   "tabseq" "try"
    "unless"
    "var" "var-" "varfn" "varglobal"
    "when" "when-let" "when-with" "while"
