@@ -65,8 +65,9 @@
 The following keys are available in `jee-mode`:
 
 \\{jee-mode-mode}"
-
-  nil " jee" jee-mode-map)
+  :init-value nil
+  :lighter " jee"
+  :keymap jee-mode-map)
 
 (jee-comment
 
