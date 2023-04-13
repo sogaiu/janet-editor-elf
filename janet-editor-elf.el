@@ -37,7 +37,6 @@
 (require 'jee-indent-line)
 (require 'jee-indent-region)
 (require 'jee-tracev)
-(require 'jee-utils)
 
 (defvar jee-mode-map
   (let ((map (make-sparse-keymap)))
@@ -69,7 +68,7 @@ The following keys are available in `jee-mode`:
   :lighter " jee"
   :keymap jee-mode-map)
 
-(jee-comment
+(ignore
 
  (add-hook 'janet-mode-hook
            (lambda ()

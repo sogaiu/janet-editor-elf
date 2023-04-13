@@ -30,7 +30,6 @@
 ;;; Code:
 
 (require 'jee-top-level)
-(require 'jee-utils)
 
 (defvar jee-indent-region--helper-path
   (expand-file-name
@@ -227,7 +226,7 @@ multiline strings is left alone."
             (dolist (file-path jee-indent-region--temp-files)
               (delete-file file-path 'trash))))
 
-(jee-comment
+(ignore
 
  (add-hook 'janet-mode-hook
            (lambda ()
