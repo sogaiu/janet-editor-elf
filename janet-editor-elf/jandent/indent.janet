@@ -73,7 +73,7 @@
         :token (some :symchars)
         :hex (range "09" "af" "AF")
         :escape
-        (sequence "\\" (choice (set "ntrzfev0\"\\")
+        (sequence "\\" (choice (set `"'0?\abefnrtvz`)
                                (sequence "x" (repeat 2 :hex))
                                (sequence "u" (repeat 4 :hex))
                                (sequence "U" (repeat 6 :hex))
