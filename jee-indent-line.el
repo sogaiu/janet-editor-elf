@@ -36,7 +36,9 @@
    (concat (expand-file-name
 	    (file-name-directory (or load-file-name
 				     buffer-file-name)))
-	   "janet-editor-elf/indent-line.janet"))
+	   "janet-editor-elf/"
+           "janet-indent/"
+           "indent-line.janet"))
   "Path to helper program to calculate indentation for a line.")
 
 (defvar jee-indent-line--debug-output
