@@ -17,12 +17,6 @@ support in editors.  The idea is that externalization can:
 * Indentation
 * Wrapping and unwrapping `tracev` and `comment` forms
 
-## Planned
-
-* Determine expression before the cursor
-* Check for [left margin convention](doc/left-margin-convention.md) 
-  compliance
-
 ## Editor Support
 
 At the moment, there is only [integration with Emacs](doc/emacs.md).
