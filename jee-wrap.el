@@ -21,7 +21,9 @@
    (concat (expand-file-name
 	    (file-name-directory (or load-file-name
 				     buffer-file-name)))
-	   "janet-editor-elf/wrap.janet"))
+	   "janet-editor-elf/"
+           "janet-unwrap/"
+           "unwrap.janet"))
   "Path to helper program to query form bounds.")
 
 (defvar jee-wrap--debug-output
