@@ -19,7 +19,9 @@
    (concat (expand-file-name
 	    (file-name-directory (or load-file-name
 				     buffer-file-name)))
-	   "janet-editor-elf/bounds.janet"))
+	   "janet-editor-elf/"
+           "janet-bounds/"
+           "bounds.janet"))
   "Path to helper program to calculate bounds.")
 
 (defvar jee-bounds--debug-output
