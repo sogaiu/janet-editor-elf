@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/sogaiu/janet-bounds
+	branch = master
+	commit = 671f9de3d995b7c31bacd0671030ac6ff4293bc4
+	parent = c2cecc1a333470f519b09e16eb677967691774a7
+	method = merge
+	cmdver = 0.4.6
