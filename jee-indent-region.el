@@ -36,7 +36,9 @@
    (concat (expand-file-name
 	    (file-name-directory (or load-file-name
 				     buffer-file-name)))
-	   "janet-editor-elf/indent-region.janet"))
+	   "janet-editor-elf/"
+           "janet-indent/"
+           "indent-region.janet"))
   "Path to helper program to calculate indentation for a region.")
 
 (defvar jee-indent-region--debug-output
