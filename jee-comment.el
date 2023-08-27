@@ -17,7 +17,7 @@
 (defun jee-comment-wrap ()
   "Wrap with comment call."
   (interactive)
-  (jee-wrap--wrap-with "comment"))
+  (jee-wrap-wrap-with "comment"))
 
 (defun jee-comment-unwrap ()
   "Remove comment wrapping."

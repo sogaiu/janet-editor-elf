@@ -17,7 +17,7 @@
 (defun jee-tracev-wrap ()
   "Wrap with tracev call."
   (interactive)
-  (jee-wrap--wrap-with "tracev"))
+  (jee-wrap-wrap-with "tracev"))
 
 (defun jee-tracev-unwrap ()
   "Remove tracev wrapping."

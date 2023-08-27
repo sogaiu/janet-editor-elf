@@ -165,12 +165,13 @@ helper program."
         ;; ask the helper to try to determine bounds
         (jee-wrap--helper start end cur-line cur-col name)))))
 
-(defun jee-wrap--wrap-with (name-ish)
+(defun jee-wrap-wrap-with (name-ish)
   "Wrap with call to NAME-ISH.
 
 If NAME-ISH is an empty string or ends with a space or newline,
 inserts NAME-ISH as-is.  Otherwise, inserts a space after
 NAME-ISH."
+  (interactive "sSymbol name: ")
   (when-let ((result (jee-bounds--calculate)))
     (let ((offset (nth 0 result))
           (start-line (nth 1 result))
