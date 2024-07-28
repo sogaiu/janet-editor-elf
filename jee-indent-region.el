@@ -37,6 +37,8 @@
 	    (file-name-directory (or load-file-name
 				     buffer-file-name)))
 	   "janet-editor-elf/"
+           "vendor/"
+           "janet-indent/"
            "janet-indent/"
            "indent-region.janet"))
   "Path to helper program to calculate indentation for a region.")

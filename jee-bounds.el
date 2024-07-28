@@ -20,6 +20,8 @@
 	    (file-name-directory (or load-file-name
 				     buffer-file-name)))
 	   "janet-editor-elf/"
+           "vendor/"
+           "janet-bounds/"
            "janet-bounds/"
            "bounds.janet"))
   "Path to helper program to calculate bounds.")
