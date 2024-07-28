@@ -1,0 +1,7 @@
+Name: tracev
+Line: 2
+Column: 10
+
+(def a
+  (tracev (+ 3
+             (- 1 2))))

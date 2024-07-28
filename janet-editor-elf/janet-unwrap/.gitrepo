@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/sogaiu/janet-unwrap
+	branch = master
+	commit = 988093b4ebfa829052b295c93e340d786d18852e
+	parent = 59a341cbab51b274374fcae2574b48fc42f3e867
+	method = merge
+	cmdver = 0.4.9
