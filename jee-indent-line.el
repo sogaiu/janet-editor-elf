@@ -37,7 +37,6 @@
 	    (file-name-directory (or load-file-name
 				     buffer-file-name)))
 	   "janet-editor-elf/"
-           "vendor/"
            "janet-indent/"
            "janet-indent/"
            "indent-line.janet"))

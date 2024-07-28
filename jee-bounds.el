@@ -20,7 +20,6 @@
 	    (file-name-directory (or load-file-name
 				     buffer-file-name)))
 	   "janet-editor-elf/"
-           "vendor/"
            "janet-bounds/"
            "janet-bounds/"
            "bounds.janet"))
