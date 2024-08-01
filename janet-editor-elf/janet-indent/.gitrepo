@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/sogaiu/janet-indent
 	branch = master
-	commit = c9a73cb68aeb90953b69f43c6a721d82a6ee7cd1
-	parent = b446d46c94061de452dd6bf0a35d1bab8595b5d6
+	commit = faa0e2c5b595b75a383e24a3b04e1b519b51c362
+	parent = d451304ab41e592c345112707ed2a3e65399d5bb
 	method = merge
 	cmdver = 0.4.9
