@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/sogaiu/janet-bounds
 	branch = master
-	commit = fc460fd9ecad36926845e849da45d780a5f8e6d7
-	parent = 2060e623586393ab1ffa58ad63f2afd3b11e2699
+	commit = be91bf072f1012ca5de4234771f7cebee70ef23e
+	parent = 17a415a049196ff571aea074884461b8c36e6ca3
 	method = merge
 	cmdver = 0.4.9

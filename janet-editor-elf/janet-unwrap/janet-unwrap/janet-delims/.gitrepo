@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/sogaiu/janet-delims
 	branch = master
-	commit = 969c2b1955625ed6147ba9f38ac167813ae1221f
-	parent = c926c3287ceb60b5a9b84391b5006be938fedd61
+	commit = ee7faa2ac2630798061f2d8d0fb048b815a2cfed
+	parent = 194165651d2ee23b4504d8c3042319f4104f109d
 	method = merge
 	cmdver = 0.4.9

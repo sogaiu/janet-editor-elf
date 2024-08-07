@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/sogaiu/janet-unwrap
 	branch = master
-	commit = 3178e533711c8ffcc75a02e647483c95503053da
-	parent = 83d46e845a25db96cfadb319d18b6568ea58f063
+	commit = bfc34f5d34028e5dd4c72bcc3a480cb6c94cdf9d
+	parent = b7a44fc85d80d1cd7bb6bbb3c55b4def3fb4d968
 	method = merge
 	cmdver = 0.4.9
